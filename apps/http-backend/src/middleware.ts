@@ -1,4 +1,4 @@
-import {Request,Response,NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 
 // Extend the Request interface to include the user property
 declare global {
@@ -10,7 +10,7 @@ declare global {
   }
 }
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "./config";
+import { JWT_SECRET } from "@repo/backend-common/config";
 
 
 export function middleware(req:Request, res:Response, next:NextFunction) {
@@ -21,10 +21,16 @@ export function middleware(req:Request, res:Response, next:NextFunction) {
 
   if(decoded) {
     // User is authenticated
-    req.user = decoded.userId;
-    next();
+    // req.user = decoded.userId;
+    // next();
   }else {
     // User is not authenticated
     return res.status(403).json({ message: "Unauthorized" });
   }
 }
+
+
+// export const middleware = (req: Request, res: Response, next: NextFunction): void => {
+//     // Your middleware logic here
+//     next(); // Ensure next() is called to pass control to the next middleware or route handler
+// };
