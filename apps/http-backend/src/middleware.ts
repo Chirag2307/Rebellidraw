@@ -13,7 +13,7 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common/config";
 
 
-export function middleware(req:Request, res:Response, next:NextFunction) {
+export function middleware(req: Request, res: Response, next: NextFunction){
   // Middleware logic here
 
   const token = req.headers["authorization"]??"";
@@ -21,11 +21,13 @@ export function middleware(req:Request, res:Response, next:NextFunction) {
 
   if(decoded) {
     // User is authenticated
-    // req.user = decoded.userId;
-    // next();
-  }else {
+    // @ts-ignore Gajab
+    req.userId = decoded.userId;
+    next();
+  }
+  else {
     // User is not authenticated
-    return res.status(403).json({ message: "Unauthorized" });
+    res.status(403).json({ message: "Unauthorized" });
   }
 }
 
