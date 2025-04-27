@@ -72,25 +72,33 @@ wss.on('connection', function connection(ws, request) {
 
         }
         if (parsedData.type === "chat") {
-            const roomId = parsedData.roomId;
+            const roomId = parsedData.roomid;
             const message = parsedData.message;
-            await prismaClient.chat.create({
-                data: {
-                    roomId,
-                    message,
-                    userId
-                }
-            })
-            users.forEach(user => {
-                if (user.rooms.includes(roomId)) {
-                    user.ws.send(JSON.stringify({
-                        type: "chat",
-                        message: message,
-                        roomId
-                    }))
-                }
-            })
+            if (!roomId) {
+                console.error("Room ID is missing");
+                return;
+            }
+            try {
+                await prismaClient.chat.create({
+                    data: {
+                        roomId: Number(roomId),
+                        message,
+                        userId
+                    }
+                });
+                users.forEach(user => {
+                    if (user.rooms.includes(roomId)) {
+                        user.ws.send(JSON.stringify({
+                            type: "chat",
+                            message: message,
+                            roomId
+                        }))
+                    }
+                })
+            } catch (error) {
+                console.error("Failed to create chat:", error);
+            }
         };
-        ws.send('pong');
+        ws.send(JSON.stringify({ type: "pong" }));
     });
 });
