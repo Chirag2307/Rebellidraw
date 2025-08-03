@@ -101,6 +101,14 @@ app.get('/room/:slug' , async (req, res) => {
             slug
         }
     });
+    
+    if (!room) {
+        res.status(404).json({
+            error: 'Room not found'
+        });
+        return;
+    }
+    
     res.json({
         room
     })

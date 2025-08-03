@@ -1,84 +1,140 @@
-# Turborepo starter
+# Rebellidraw - Real-time Collaborative Drawing App
 
-This Turborepo starter is maintained by the Turborepo core team.
+A real-time collaborative drawing application built with Next.js, WebSockets, and TypeScript.
 
-## Using this example
+## Features
 
-Run the following command:
+- 🎨 Real-time collaborative drawing
+- ✏️ Multiple drawing tools (pencil, rectangle, circle, eraser)
+- 🚀 Instant room creation and joining
+- 💬 WebSocket-based real-time communication
+- 🎯 Simple and intuitive interface
 
-```sh
-npx create-turbo@latest
-```
-
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+## Project Structure
 
 ```
-cd my-turborepo
-pnpm build
+Rebellidraw/
+├── apps/
+│   ├── rebelidraw/          # Next.js frontend
+│   └── ws-backend/          # WebSocket server
+├── packages/
+│   ├── backend-common/      # Shared backend utilities
+│   ├── database/           # Database schema and client
+│   └── ui/                 # Shared UI components
 ```
 
-### Develop
+## Quick Start
 
-To develop all apps and packages, run the following command:
+### Prerequisites
 
-```
-cd my-turborepo
-pnpm dev
-```
+- Node.js 18+
+- pnpm
 
-### Remote Caching
+### Local Development
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+1. **Install dependencies:**
+   ```bash
+   pnpm install
+   ```
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+2. **Start the WebSocket server:**
+   ```bash
+   cd apps/ws-backend
+   pnpm build
+   pnpm start
+   ```
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+3. **Start the frontend (in a new terminal):**
+   ```bash
+   cd apps/rebelidraw
+   pnpm dev
+   ```
 
-```
-cd my-turborepo
-npx turbo login
-```
+4. **Open your browser:**
+   - Frontend: http://localhost:3000
+   - WebSocket server: ws://localhost:8080
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### How to Use
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+1. Visit http://localhost:3000
+2. Enter a room ID or click "Create Random Room"
+3. Start drawing! Your drawings will appear in real-time for other users in the same room
+4. Share the room URL with others to collaborate
 
-```
-npx turbo link
-```
+## Deployment
 
-## Useful Links
+### Frontend (Vercel/Netlify)
 
-Learn more about the power of Turborepo:
+1. **Build the frontend:**
+   ```bash
+   cd apps/rebelidraw
+   pnpm build
+   ```
 
-- [Tasks](https://turbo.build/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/docs/reference/command-line-reference)
+2. **Deploy to Vercel:**
+   - Connect your GitHub repository to Vercel
+   - Set the root directory to `apps/rebelidraw`
+   - Deploy
+
+3. **Environment Variables:**
+   - Update the WebSocket URL in `apps/rebelidraw/draw/index.ts` to point to your deployed WebSocket server
+
+### WebSocket Backend (Railway/Render)
+
+1. **Prepare for deployment:**
+   ```bash
+   cd apps/ws-backend
+   pnpm build
+   ```
+
+2. **Deploy to Railway:**
+   - Connect your GitHub repository
+   - Set the root directory to `apps/ws-backend`
+   - Set the start command to: `node dist/index.js`
+   - Set the port to: `8080`
+
+3. **Environment Variables:**
+   - `JWT_SECRET`: Your JWT secret (optional, defaults to "123123")
+
+### Database (Optional)
+
+The app currently works without a database for basic drawing functionality. If you want to add chat features:
+
+1. Set up a PostgreSQL database
+2. Update the database connection in `packages/database/prisma/schema.prisma`
+3. Run migrations: `pnpm prisma migrate deploy`
+
+## Development
+
+### Adding New Features
+
+1. **Drawing Tools:** Add new tools in `apps/rebelidraw/draw/index.ts`
+2. **WebSocket Events:** Add new event types in both frontend and backend
+3. **UI Components:** Create reusable components in `packages/ui`
+
+### Project Scripts
+
+- `pnpm dev` - Start all development servers
+- `pnpm build` - Build all packages
+- `pnpm lint` - Run linting
+- `pnpm check-types` - Check TypeScript types
+
+## Architecture
+
+- **Frontend:** Next.js 15 with React 19
+- **Backend:** Node.js with WebSocket server
+- **Real-time:** WebSocket for instant drawing synchronization
+- **Styling:** Tailwind CSS
+- **Type Safety:** TypeScript throughout
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test locally
+5. Submit a pull request
+
+## License
+
+MIT
