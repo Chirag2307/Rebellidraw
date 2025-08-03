@@ -16,11 +16,11 @@
    - Sign up/Login with GitHub
    - Click "New Project"
    - Import your GitHub repository
-   - Set the following:
-     - **Framework Preset:** Next.js
-     - **Root Directory:** `apps/rebelidraw`
-           - **Build Command:** `pnpm run build:rebelidraw`
-     - **Output Directory:** `.next`
+       - Set the following:
+      - **Framework Preset:** Next.js (auto-detected)
+      - **Root Directory:** `apps/rebelidraw`
+      - **Build Command:** (leave empty - auto-detected)
+      - **Output Directory:** (leave empty - auto-detected)
    - Click "Deploy"
 
 3. **Update WebSocket URL**
