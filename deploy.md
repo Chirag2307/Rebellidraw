@@ -19,7 +19,7 @@
    - Set the following:
      - **Framework Preset:** Next.js
      - **Root Directory:** `apps/rebelidraw`
-     - **Build Command:** `cd ../.. && pnpm install && pnpm build --filter=rebelidraw`
+           - **Build Command:** `pnpm run build:rebelidraw`
      - **Output Directory:** `.next`
    - Click "Deploy"
 
@@ -51,19 +51,22 @@
    - Railway will provide a URL like: `https://your-app.railway.app`
    - The WebSocket URL will be: `wss://your-app.railway.app`
 
-### 3. Update Frontend with WebSocket URL
+### 3. Set Environment Variables in Vercel
 
-1. **Update the WebSocket URL in your code:**
-   ```typescript
-   // In apps/rebelidraw/draw/index.ts
-   const wsUrl = token 
-       ? `wss://your-app.railway.app?token=${token}`
-       : 'wss://your-app.railway.app';
-   ```
+1. **In Vercel Dashboard:**
+   - Go to your project settings
+   - Click "Environment Variables" tab
+   - Add new variable:
+     ```
+     Name: NEXT_PUBLIC_WS_URL
+     Value: wss://your-app.railway.app
+     Environment: Production (and Preview if needed)
+     ```
+   - Click "Save"
 
 2. **Redeploy the frontend**
-   - Push the changes to GitHub
-   - Vercel will automatically redeploy
+   - Vercel will automatically redeploy with the new environment variable
+   - No code changes needed!
 
 ## Alternative Deployment Options
 
@@ -85,11 +88,14 @@
 ## Environment Variables
 
 ### Frontend (Vercel)
-- `NEXT_PUBLIC_WS_URL`: Your WebSocket server URL
+- `NEXT_PUBLIC_WS_URL`: Your WebSocket server URL (e.g., `wss://your-app.railway.app`)
+  - Set in Vercel Dashboard → Project Settings → Environment Variables
+  - Must start with `wss://` for production (secure WebSocket)
+  - The `NEXT_PUBLIC_` prefix makes it available in the browser
 
 ### Backend (Railway/Render)
-- `JWT_SECRET`: Secret key for JWT tokens
-- `PORT`: Port number (usually auto-detected)
+- `JWT_SECRET`: Secret key for JWT tokens (any random string)
+- `PORT`: Port number (usually auto-detected, but can be set to 8080)
 
 ## Testing Deployment
 
@@ -146,3 +152,37 @@ wscat -c ws://localhost:8080
 - [ ] Error handling implemented
 - [ ] Performance optimized
 - [ ] Monitoring set up 
+
+## **🎯 Quick Fix Steps:**
+
+### **Step 1: Update Vercel Build Command**
+In your Vercel deployment settings, change the build command to:
+```bash
+cd ../.. && pnpm install --frozen-lockfile && pnpm build --filter=rebelidraw
+```
+
+### **Step 2: Alternative - Use npm**
+If pnpm still fails, try:
+```bash
+cd ../.. && npm install && npm run build --workspace=apps/rebelidraw
+```
+
+### **Step 3: Check pnpm-lock.yaml**
+Make sure your `pnpm-lock.yaml` is up to date:
+```bash
+git add pnpm-lock.yaml
+git commit -m "Update lockfile"
+git push origin main
+```
+
+## ** Root Cause:**
+- **pnpm version mismatch** between local and deployment
+- **Lockfile inconsistency**
+- **Registry fetch issues** with certain packages
+
+## **💡 Pro Tips:**
+1. **Use `--frozen-lockfile`** to ensure exact dependency versions
+2. **Commit `pnpm-lock.yaml`** to ensure consistency
+3. **Consider npm** if pnpm continues to fail in deployment
+
+**Try updating the build command first - this usually fixes the issue!** 🚀 
