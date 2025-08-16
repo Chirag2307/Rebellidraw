@@ -45,8 +45,8 @@ export function initDraw(canvas: HTMLCanvasElement, roomId: string, token?: stri
 
     // Connect to WebSocket
     const wsUrl = token 
-        ? `ws://localhost:8080?token=${token}`
-        : 'ws://localhost:8080';
+    ? `${process.env.NEXT_PUBLIC_WS_URL || 'wss://rebellidraw-backend.onrender.com'}?token=${token}`
+    : process.env.NEXT_PUBLIC_WS_URL || 'wss://rebellidraw-backend.onrender.com';
     
     socket = new WebSocket(wsUrl);
 

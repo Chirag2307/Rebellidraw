@@ -4,7 +4,8 @@
   "scripts": {
     "build": "turbo run build",
     "build:rebelidraw": "turbo run build --filter=rebelidraw",
-    "build:rebelidraw:npm": "npm install && npm run build --workspace=apps/rebelidraw",
+    "build:rebelidraw:npm": "pnpm install && npm run build --workspace=apps/rebelidraw",
+    "build:rebelidraw:vercel": "pnpm install && cd apps/rebelidraw && npm run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
